@@ -97,8 +97,84 @@ async function createBacalla(req, res) {
   }
 }
 
+async function updateBacalla(req, res) {
+  const id = parseId(req.params.id);
+
+  if (id === null) {
+    return res.status(400).json({ error: "L'id ha de ser numeric" });
+  }
+
+  const validationError = validatePayload(req.body);
+
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
+  }
+
+  const { nom, origen, tipus, descripcio } = req.body;
+
+  try {
+    if (isMongoMode) {
+      const updated = await Bacalla.findOneAndUpdate(
+        { id },
+        { nom, origen, tipus, descripcio },
+        { new: true }
+      );
+
+      if (!updated) {
+        return res.status(404).json({ error: 'Varietat de bacalla no trobada' });
+      }
+
+      return res.json(updated);
+    }
+
+    const index = bacallaData.findIndex((entry) => entry.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({ error: 'Varietat de bacalla no trobada' });
+    }
+
+    bacallaData[index] = { id, nom, origen, tipus, descripcio };
+    return res.json(bacallaData[index]);
+  } catch (error) {
+    return res.status(500).json({ error: 'Error actualitzant la varietat de bacalla' });
+  }
+}
+
+async function deleteBacalla(req, res) {
+  const id = parseId(req.params.id);
+
+  if (id === null) {
+    return res.status(400).json({ error: "L'id ha de ser numeric" });
+  }
+
+  try {
+    if (isMongoMode) {
+      const deleted = await Bacalla.findOneAndDelete({ id });
+
+      if (!deleted) {
+        return res.status(404).json({ error: 'Varietat de bacalla no trobada' });
+      }
+
+      return res.status(204).send();
+    }
+
+    const index = bacallaData.findIndex((entry) => entry.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({ error: 'Varietat de bacalla no trobada' });
+    }
+
+    bacallaData.splice(index, 1);
+    return res.status(204).send();
+  } catch (error) {
+    return res.status(500).json({ error: 'Error eliminant la varietat de bacalla' });
+  }
+}
+
 module.exports = {
   listBacalla,
   getBacallaById,
-  createBacalla
+  createBacalla,
+  updateBacalla,
+  deleteBacalla
 };
