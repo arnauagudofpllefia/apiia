@@ -7,7 +7,7 @@ const bacallaRoutes = require('./routes/bacallaRoutes');
 
 const app = express();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const DATA_MODE = process.env.DATA_MODE || 'memory';
 const allowedOrigins = (process.env.CLIENT_ORIGINS || process.env.CLIENT_ORIGIN || '')
   .split(',')
