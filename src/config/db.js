@@ -7,7 +7,9 @@ async function connectDB() {
     throw new Error('Falta la variable MONGODB_URI en el entorno');
   }
 
-  await mongoose.connect(uri);
+  await mongoose.connect(uri, {
+    serverSelectionTimeoutMS: 10000
+  });
   console.log('MongoDB Atlas conectado');
 }
 

@@ -8,13 +8,13 @@ const bacallaRoutes = require('./routes/bacallaRoutes');
 const app = express();
 
 const PORT = process.env.PORT || 3001;
-const DATA_MODE = process.env.DATA_MODE || 'memory';
+const DATA_MODE = (process.env.DATA_MODE || 'memory').trim().toLowerCase();
 const allowedOrigins = (process.env.CLIENT_ORIGINS || process.env.CLIENT_ORIGIN || '')
   .split(',')
   .map((origin) => origin.trim())
   .filter(Boolean);
 
-allowedOrigins.push('http://localhost:3000');   
+allowedOrigins.push('http://localhost:3000');
 
 app.use(
   cors({
@@ -47,6 +47,14 @@ app.use((err, req, res, next) => {
 
 async function startServer() {
   try {
+    console.log('Configuracion de arranque:', {
+      render: Boolean(process.env.RENDER),
+      port: PORT,
+      dataMode: DATA_MODE,
+      mongoConfigured: Boolean(process.env.MONGODB_URI),
+      clientOriginsConfigured: allowedOrigins.length
+    });
+
     if (DATA_MODE === 'mongo') {
       await connectDB();
     }
@@ -57,7 +65,7 @@ async function startServer() {
       console.log(`CORS habilitat per a: ${allowedOrigins.join(', ') || 'cap origen configurat'}`);
     });
   } catch (error) {
-    console.error('No se pudo iniciar la API:', error.message);
+    console.error('No se pudo iniciar la API:', error);
     process.exit(1);
   }
 }

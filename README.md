@@ -34,6 +34,20 @@ MONGODB_URI=mongodb+srv://<usuario>:<password>@<cluster>.mongodb.net/bacalla_db?
 
 `MONGODB_URI` nomes es obligatoria quan `DATA_MODE=mongo`.
 
+## Deploy a Render
+
+Render no fa servir el teu fitxer `.env` local. Les variables s'han de definir a l'apartat Environment del servei.
+
+Variables recomanades:
+
+- `PORT`: no cal fixar-la manualment; Render la proporciona automaticament
+- `DATA_MODE=memory` si vols arrencar sense MongoDB
+- `DATA_MODE=mongo` si vols connectar amb Atlas
+- `MONGODB_URI`: obligatoria nomes quan `DATA_MODE=mongo`
+- `CLIENT_ORIGINS=https://frontiabacalla.vercel.app`
+
+Si a Render el build acaba be pero el servei surt amb codi `1`, en aquest projecte el motiu mes habitual es un error de connexio amb MongoDB Atlas o una `MONGODB_URI` absent/incorrecta quan `DATA_MODE=mongo`.
+
 ## Execucio
 
 ```bash
