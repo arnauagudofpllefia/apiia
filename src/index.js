@@ -14,7 +14,7 @@ const allowedOrigins = (process.env.CLIENT_ORIGINS || process.env.CLIENT_ORIGIN 
   .map((origin) => origin.trim())
   .filter(Boolean);
 
-allowedOrigins.push('http://localhost:3000', 'http://localhost:5173');
+allowedOrigins.push('http://localhost:3000');   
 
 app.use(
   cors({
