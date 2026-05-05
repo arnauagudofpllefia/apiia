@@ -1,7 +1,7 @@
 const Bacalla = require('../models/bacallaModel');
 const bacallaData = require('../data/bacallaData');
 
-const isMongoMode = process.env.DATA_MODE === 'mongo';
+const isMongoMode = (process.env.DATA_MODE || 'memory').trim().toLowerCase() === 'mongo';
 
 function parseId(rawId) {
   const id = Number.parseInt(rawId, 10);
